@@ -1197,7 +1197,7 @@ static int process_args (int argc, char *argv[], struct eeprom_fields *ee)
       break;
     case arg_addr:
       addr = unsigned_val(argv[i++],0);
-      break
+      break;
     }
   }
 
@@ -1290,7 +1290,9 @@ int main (int argc, char *argv[])
   }
 
   if(bus & addr) {
-    if (ftdi_usb_open_bus_addr(&ftdi, bus, addr)) {
+    char device_string[10];
+    snprintf(device_string,10,"d:%03d/03d",bus, addr);
+    if (ftdi_usb_open_string(&ftdi, device_stringdevice_string)) {
       fprintf(stderr, "ftdi_usb_open_bus_addr() failed for %03d:%03d %s\n",
               bus, addr, ftdi_get_error_string(&ftdi));
       exit(ENODEV);
