@@ -1193,10 +1193,10 @@ static int process_args (int argc, char *argv[], struct eeprom_fields *ee)
       ee->usb_pid = unsigned_val(argv[i++], 0xffff);
       break;
     case arg_bus:
-      bus = unsigned_val(argv[i++], 0);
+      bus = unsigned_val(argv[i++], 255);
       break;
     case arg_addr:
-      addr = unsigned_val(argv[i++],0);
+      addr = unsigned_val(argv[i++], 255);
       break;
     }
   }
