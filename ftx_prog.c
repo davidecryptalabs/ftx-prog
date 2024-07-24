@@ -46,6 +46,7 @@ static const char *save_path = NULL, *restore_path = NULL;
 
 static int bus = 0;
 static int addr = 0;
+static bool do_reset = true;
 
 /* ------------ Bit Definitions for EEPROM Decoding ------------ */
 
@@ -151,6 +152,7 @@ enum arg_type {
   arg_cbus_config,
   arg_bus,
   arg_addr,
+  arg_no_reset,
 };
 
 struct args_required_t
@@ -195,6 +197,7 @@ const struct args_required_t req_info[] =
   {arg_cbus_config,1},
   {arg_bus, 1},
   {arg_addr, 1},
+  {arg_no_reset, 0},
 };
 
 
@@ -236,6 +239,7 @@ static const char* arg_type_strings[] = {
   "--cbus-config",
   "--bus",
   "--addr",
+  "--no-reset",
   NULL
 };
 static const char* rs232_strings[] = {
@@ -329,8 +333,9 @@ static const char *arg_type_help[] = {
   "   				    # Erase the EEPROM and exit",
   "dbus_cfg",
   "cbus_cfg",
-  "  <bus>   # Specify USB bus of the device to use",
-  "  <address>   # Specify USB address of the device to use",
+  "   <bus>       # Specify USB bus of the device to use",
+  "   <address>   # Specify USB address of the device to use",
+  "               # Don't reset the device after programming",
 };
 
 static const char *bool_strings[] = {
@@ -1198,6 +1203,9 @@ static int process_args (int argc, char *argv[], struct eeprom_fields *ee)
     case arg_addr:
       addr = unsigned_val(argv[i++], 255);
       break;
+    case arg_no_reset:
+      do_reset = false;
+      break;
     }
   }
 
@@ -1361,8 +1369,10 @@ int main (int argc, char *argv[])
       }
       if (erase_eeprom == 1) { printf("Erase done\n"); }
 
-      /* Reset the device to force it to load the new settings */
-      ftdi_usb_reset(&ftdi);
+      if(do_reset) {
+        /* Reset the device to force it to load the new settings */
+        ftdi_usb_reset(&ftdi);
+      }
     }
   }
 
