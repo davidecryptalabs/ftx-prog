@@ -45,7 +45,7 @@ static bool use_8b_strings = false;
 static const char *save_path = NULL, *restore_path = NULL;
 
 static int bus = 0;
-static int addr = 0;
+static int devnode = 0;
 static bool do_reset = true;
 
 /* ------------ Bit Definitions for EEPROM Decoding ------------ */
@@ -238,7 +238,7 @@ static const char* arg_type_strings[] = {
   "--dbus-config",
   "--cbus-config",
   "--bus",
-  "--addr",
+  "--dev",
   "--no-reset",
   NULL
 };
@@ -334,7 +334,7 @@ static const char *arg_type_help[] = {
   "dbus_cfg",
   "cbus_cfg",
   "   <bus>       # Specify USB bus of the device to use",
-  "   <address>   # Specify USB address of the device to use",
+  "   <devnode>   # Specify USB device node of the device to use",
   "               # Don't reset the device after programming",
 };
 
@@ -1297,12 +1297,12 @@ int main (int argc, char *argv[])
     return -1;
   }
 
-  if(bus & addr) {
+  if(bus & devnode) {
     char device_string[10];
-    snprintf(device_string,10,"d:%03d/%03d",bus, addr);
+    snprintf(device_string,10,"d:%03d/%03d",bus, devnode);
     if (ftdi_usb_open_string(&ftdi, device_string)) {
-      fprintf(stderr, "ftdi_usb_open_bus_addr() failed for %03d:%03d %s\n",
-              bus, addr, ftdi_get_error_string(&ftdi));
+      fprintf(stderr, "ftdi_usb_open_string() failed for %03d/%03d %s\n",
+              bus, devnode, ftdi_get_error_string(&ftdi));
       exit(ENODEV);
     }
   } else {
