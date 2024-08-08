@@ -151,7 +151,7 @@ enum arg_type {
   arg_dbus_config,
   arg_cbus_config,
   arg_bus,
-  arg_addr,
+  arg_devnode,
   arg_no_reset,
 };
 
@@ -196,7 +196,7 @@ const struct args_required_t req_info[] =
   {arg_erase_eeprom, 0},
   {arg_cbus_config,1},
   {arg_bus, 1},
-  {arg_addr, 1},
+  {arg_devnode, 1},
   {arg_no_reset, 0},
 };
 
@@ -1200,8 +1200,8 @@ static int process_args (int argc, char *argv[], struct eeprom_fields *ee)
     case arg_bus:
       bus = unsigned_val(argv[i++], 255);
       break;
-    case arg_addr:
-      addr = unsigned_val(argv[i++], 255);
+    case arg_devnode:
+      devnode = unsigned_val(argv[i++], 255);
       break;
     case arg_no_reset:
       do_reset = false;
